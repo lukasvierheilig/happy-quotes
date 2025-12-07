@@ -1,0 +1,49 @@
+@host = {{hostname}}:{{port}}
+@url = http://{{host}}/api
+
+### All quotes
+GET {{url}}/quotes
+
+> {%
+    client.test("Request executed successfully", () => {
+        client.assert(response.status === 200, `Response status is not 200 -> ${response.status}`);
+    });
+%}
+
+### A random quote
+GET {{url}}/quotes/random
+
+> {%
+    client.test("Request executed successfully", () => {
+        client.assert(response.status === 200, `Response status is not 200 -> ${response.status}`);
+    });
+%}
+
+
+### Create a new quote
+POST {{url}}/quotes
+Content-Type: application/json
+
+{
+  "text": "New fantastic quote!"
+}
+
+> {%
+    client.test("Request executed successfully", () => {
+        client.assert(response.status === 201, `Response status is not 201 -> ${response.status}`);
+    });
+    const locationHeader = response.headers.valueOf("Location");
+
+    client.test("Location header is present", function() {
+        client.assert(!!locationHeader, "Location header is missing.");
+    });
+
+    if (locationHeader) {
+        client.global.set("urlCreatedQuote", locationHeader);
+    }
+%}
+
+
+### Get the newly created quote
+GET {{urlCreatedQuote}}
+
