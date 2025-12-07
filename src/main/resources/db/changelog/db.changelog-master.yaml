@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: 0010_CreateDatabaseSchema.sql
+      relativeToChangelogFile: true
