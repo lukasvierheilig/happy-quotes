@@ -68,6 +68,11 @@ public class QuoteService {
         return quotesRepository.save(new Quote(id, newText, quote.qrCode()));
     }
 
+    public void deleteQuote(UUID id) {
+        LOGGER.info("Deleting quote with ID {}", id);
+        quotesRepository.deleteById(id);
+    }
+
     public Optional<Quote> randomQuote() {
         return quotesRepository.findRandomQuote();
     }

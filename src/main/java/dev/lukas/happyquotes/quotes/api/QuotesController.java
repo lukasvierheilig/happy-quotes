@@ -77,6 +77,12 @@ public class QuotesController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(quote.qrCode());
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteQuote(@PathVariable UUID id) {
+        quoteService.deleteQuote(id);
+        return ResponseEntity.noContent().build();
+    }
+
     private QuoteResponse mapToResponse(Quote quote) {
 
         if (quote.qrCode() == null) {
