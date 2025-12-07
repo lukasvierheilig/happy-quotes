@@ -7,5 +7,6 @@ create schema if not exists happy_quotes;
 create table happy_quotes.quotes
 (
     id   uuid default gen_random_uuid() primary key,
-    text text
+    text text,
+    qr_code bytea
 );

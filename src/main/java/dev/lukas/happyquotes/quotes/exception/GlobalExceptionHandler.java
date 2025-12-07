@@ -24,6 +24,13 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), List.of());
     }
 
+    @ExceptionHandler(QrCodeServiceException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleQrCodeServiceException(QrCodeServiceException ex) {
+        LOGGER.error("Error while generating QR code: {}", ex.getMessage());
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), List.of());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {

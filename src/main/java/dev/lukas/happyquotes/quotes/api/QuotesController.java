@@ -2,13 +2,18 @@ package dev.lukas.happyquotes.quotes.api;
 
 import dev.lukas.happyquotes.quotes.exception.QuoteNotFoundException;
 import dev.lukas.happyquotes.quotes.model.Quote;
+import dev.lukas.happyquotes.quotes.service.QrCodeService;
 import dev.lukas.happyquotes.quotes.service.QuoteService;
 import jakarta.validation.Valid;
+import org.jspecify.annotations.Nullable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +44,8 @@ public class QuotesController {
 
     @PostMapping
     public ResponseEntity<Void> createNewQuote(@Valid @RequestBody CreateNewQuoteRequest request) {
-        Quote newQuote = quoteService.createNewQuote(Quote.newQuote(request.text()));
+        Quote newQuote = quoteService.createNewQuoteWithQrCode(request.text());
+
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -61,8 +67,26 @@ public class QuotesController {
         return mapToResponse(quoteService.updateQuote(id, request.text()));
     }
 
+    @GetMapping("/{id}/qr")
+    public ResponseEntity<byte[]> getQrCode(@PathVariable UUID id) {
+        Quote quote = quoteService.getQuoteById(id)
+                .orElseThrow(() -> new QuoteNotFoundException("Quote with ID " + id + " was not found."));
+        if (quote.qrCode() == null || quote.qrCode().length == 0) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(quote.qrCode());
+    }
+
     private QuoteResponse mapToResponse(Quote quote) {
-        return new QuoteResponse(quote.id(), quote.text());
+
+        if (quote.qrCode() == null) {
+            return new QuoteResponse(quote.id(), quote.text(), null);
+        }
+        return new QuoteResponse(
+                quote.id(),
+                quote.text(),
+                Base64.getEncoder().encodeToString(quote.qrCode())
+        );
     }
 
 }

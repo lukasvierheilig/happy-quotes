@@ -17,9 +17,14 @@ public class QuoteService {
     public static final Logger LOGGER = LoggerFactory.getLogger(QuoteService.class);
 
     private final QuotesRepository quotesRepository;
+    private final QrCodeService qrCodeService;
+    private final QrCodeProperties qrCodeProperties;
+    private final String QUOTES_PATH = "/api/quotes/";
 
-    public QuoteService(QuotesRepository quotesRepository) {
+    public QuoteService(QuotesRepository quotesRepository, QrCodeService qrCodeService, QrCodeProperties qrCodeProperties) {
         this.quotesRepository = quotesRepository;
+        this.qrCodeService = qrCodeService;
+        this.qrCodeProperties = qrCodeProperties;
     }
 
     public List<Quote> getAllQuotes() {
@@ -31,18 +36,36 @@ public class QuoteService {
         return quotesRepository.findById(id);
     }
 
-    public Quote createNewQuote(Quote quote) {
-        LOGGER.info("Creating new quote with text: {}", quote.text());
+    private Quote createNewQuote(Quote quote) {
         return quotesRepository.save(quote);
+    }
+
+    public Quote createNewQuoteWithQrCode(String text) {
+        LOGGER.info("Creating new quote with text: {}", text);
+
+        Quote newQuote = createNewQuote(Quote.newQuoteWithoutQrCode(text));
+
+        String qrCodeData = String.join("",
+                qrCodeProperties.host(),
+                QUOTES_PATH,
+                newQuote.id().toString());
+
+        byte[] qrCode = qrCodeService.generateQrCode(qrCodeData, qrCodeProperties.width(), qrCodeProperties.height());
+
+        if (qrCodeProperties.writeToFile()) {
+            qrCodeService.writeQrCodeToFile(qrCode, newQuote.id());
+        }
+        return quotesRepository.save(new Quote(newQuote.id(), newQuote.text(), qrCode));
+
     }
 
     public Quote updateQuote(UUID id, String newText) {
         LOGGER.info("Updating quote with ID {} with new text: {}", id, newText);
 
-        quotesRepository.findById(id)
+        Quote quote = quotesRepository.findById(id)
                 .orElseThrow(() -> new QuoteNotFoundException("Quote with ID " + id + " does not exist."));
 
-        return quotesRepository.save(new Quote(id, newText));
+        return quotesRepository.save(new Quote(id, newText, quote.qrCode()));
     }
 
     public Optional<Quote> randomQuote() {

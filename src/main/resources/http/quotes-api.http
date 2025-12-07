@@ -47,3 +47,21 @@ Content-Type: application/json
 ### Get the newly created quote
 GET {{urlCreatedQuote}}
 
+> {%
+    client.test("Request executed successfully", () => {
+        client.assert(response.status === 200, `Response status is not 200 -> ${response.status}`);
+    });
+%}
+
+
+### Get qr code of newly created quote
+GET {{urlCreatedQuote}}/qr
+Content-Type: image/png
+
+> {%
+    client.test("Request executed successfully", () => {
+        client.assert(response.status === 200, `Response status is not 200 -> ${response.status}`);
+    });
+%}
+
+
