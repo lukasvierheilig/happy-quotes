@@ -5,3 +5,15 @@ spring:
     url: jdbc:postgresql://localhost:5432/mydatabase
     username: myuser
     password: secret
+  docker:
+    compose:
+      file: compose.yaml
+      lifecycle-management: start_and_stop
+      stop:
+        command: down
+      readiness:
+        tcp:
+          connect-timeout: 200ms
+          read-timeout: 200ms
+        timeout: 2m
+        wait: always
