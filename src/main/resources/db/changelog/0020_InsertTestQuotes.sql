@@ -1,5 +1,6 @@
---changeset lukas.vierheilig:0020_insert_test_quotes
---context: dev, test-data
+--liquibase formatted sql
+
+--changeset lukas.vierheilig:0020_insert_test_quotes context:test-data
 --comment: Insert 100 happy and inspirational quotes for development and testing.
 
 INSERT INTO happy_quotes.quotes (text)
