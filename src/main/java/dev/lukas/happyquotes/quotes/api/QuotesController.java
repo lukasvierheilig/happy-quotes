@@ -2,13 +2,10 @@ package dev.lukas.happyquotes.quotes.api;
 
 import dev.lukas.happyquotes.quotes.exception.QuoteNotFoundException;
 import dev.lukas.happyquotes.quotes.model.Quote;
-import dev.lukas.happyquotes.quotes.service.QrCodeService;
 import dev.lukas.happyquotes.quotes.service.QuoteService;
 import jakarta.validation.Valid;
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
