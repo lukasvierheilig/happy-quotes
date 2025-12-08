@@ -1,8 +1,24 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      POSTGRES_PASSWORD: ${COMPOSE_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${COMPOSE_POSTGRES_USER}
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - '5432:5432'
+      - "${APP_HOST_PORT:-8080}:8080"
+    depends_on:
+      - database
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+  database:
+    image: postgres:${POSTGRES_VERSION:-18.1}
+    ports:
+      - "${DB_HOST_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
