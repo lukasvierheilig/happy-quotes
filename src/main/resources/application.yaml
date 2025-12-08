@@ -1,19 +1,8 @@
 spring:
   application:
     name: happy-quotes
-  datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: secret
-  docker:
-    compose:
-      file: compose.yaml
-      lifecycle-management: start_and_stop
-      stop:
-        command: down
-      readiness:
-        tcp:
-          connect-timeout: 200ms
-          read-timeout: 200ms
-        timeout: 2m
-        wait: always
+app:
+  qr-code:
+    width: 256
+    height: 256
+    write-to-file: false

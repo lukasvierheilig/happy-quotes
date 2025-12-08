@@ -1,8 +1,13 @@
 spring:
   liquibase:
-    contexts: dev, test-data
-app:
-  qr-code:
-    width: 256
-    height: 256
-    write-to-file: false
+    contexts: test-data
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  docker:
+    compose:
+      file: compose.yaml
+      lifecycle-management: start_and_stop
+      stop:
+        command: down
