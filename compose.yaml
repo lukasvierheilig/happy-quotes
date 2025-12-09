@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${APP_HOST_PORT:-8080}:8080"
+      - "${APP_PORT:-8080}:8080"
     profiles:
       - app
     depends_on:
@@ -21,7 +21,7 @@ services:
   database:
     image: postgres:${POSTGRES_VERSION:-18.1}
     ports:
-      - "${DB_HOST_PORT:-5432}:5432"
+      - "${DB_PORT:-5432}:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
