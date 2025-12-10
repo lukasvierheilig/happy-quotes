@@ -13,3 +13,6 @@ spring:
         command: down
       profiles:
         active: database
+logging:
+  level:
+    org.springframework.security: TRACE
