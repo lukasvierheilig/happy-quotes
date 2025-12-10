@@ -47,6 +47,7 @@ Content-Type: application/json
 
 ### Get the newly created quote
 GET {{dynamicHostCreatedQuote}}
+Authorization: Basic {{username}} {{password}}
 
 > {%
     client.test("Request executed successfully", () => {
@@ -57,7 +58,7 @@ GET {{dynamicHostCreatedQuote}}
 
 ### Get qr code of newly created quote
 GET {{dynamicHostCreatedQuote}}/qr
-Content-Type: image/png
+Authorization: Basic {{username}} {{password}}
 
 > {%
     client.test("Request executed successfully", () => {
@@ -67,6 +68,7 @@ Content-Type: image/png
 
 ### Delete newly created quote
 DELETE {{dynamicHostCreatedQuote}}
+Authorization: Basic {{username}} {{password}}
 
 > {%
     client.test("Request executed successfully", () => {
