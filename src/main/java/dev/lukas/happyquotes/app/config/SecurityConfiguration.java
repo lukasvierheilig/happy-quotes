@@ -19,7 +19,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> {
-                            authorize.requestMatchers(HttpMethod.GET, "api/quotes/**").permitAll();
+                            authorize.requestMatchers(HttpMethod.GET, "/api/quotes/**").permitAll();
                             authorize.anyRequest().authenticated();
                         }
                 )
